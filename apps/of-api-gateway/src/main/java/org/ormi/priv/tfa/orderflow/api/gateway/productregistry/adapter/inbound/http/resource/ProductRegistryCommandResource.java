@@ -315,13 +315,14 @@ public class ProductRegistryCommandResource {
 
   /**
    * Create a consumer for product registry events with the given correlation id.
-   * 
+   * Créer une Exception Personnalisée
    * Useful for consuming events with a specific correlation id to avoid consuming
    * events from other
    * producers.
    * 
    * @param correlationId - correlation id to use for the consumer
    * @return Consumer for product registry events
+    * @throws ProductRegistryEventStreamException
    */
   private Consumer<ProductRegistryEvent> getEventsConsumerByCorrelationId(String correlationId) {
     try {

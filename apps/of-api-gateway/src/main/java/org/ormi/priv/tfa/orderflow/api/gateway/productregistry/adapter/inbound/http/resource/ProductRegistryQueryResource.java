@@ -20,6 +20,7 @@ import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.query.model.NotFound;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.query.model.dto.RegistryProductDto;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.query.model.dto.RegistryProductDtoCollection;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.valueobject.ProductId;
+import org.ormi.priv.tfa.orderflow.api.gateway.productregistry.adapter.inbound.http.resource.exception.ResultsConsumerCreationException;
 
 import io.smallrye.reactive.messaging.pulsar.PulsarClientService;
 import io.smallrye.reactive.messaging.pulsar.PulsarOutgoingMessage;
@@ -56,10 +57,11 @@ public class ProductRegistryQueryResource {
    * 
    * @param productId - the product id
    * @return the response containing the product, or an error message
-   */
-  @GET
-  @Path("/products/{productId}")
-  public Response getProduct(@PathParam("productId") String productId) {
+      * @throws ResultsConsumerCreationException 
+      */
+     @GET
+     @Path("/products/{productId}")
+     public Response getProduct(@PathParam("productId") String productId) throws ResultsConsumerCreationException {
     // Create the query to get the product by id
     final GetProductById getProductById = new GetProductById(ProductId.of(productId));
     final String correlationId = java.util.UUID.randomUUID().toString();
@@ -109,10 +111,11 @@ public class ProductRegistryQueryResource {
    * Get all the products.
    * 
    * @return - the response containing the products, or an error message
-   */
-  @GET
-  @Path("/products")
-  public Response getAllProducts() {
+      * @throws ResultsConsumerCreationException 
+      */
+     @GET
+     @Path("/products")
+     public Response getAllProducts() throws ResultsConsumerCreationException {
     // Create the query to get all the products
     final GetProducts getProducts = new GetProducts();
     final String correlationId = java.util.UUID.randomUUID().toString();
@@ -158,8 +161,9 @@ public class ProductRegistryQueryResource {
    * @param correlationId - the correlation id
    * @param resultType - the return type
    * @return the consumer
+    * @throws ResultsConsumerCreationException - if the consumer creation fails
    */
-  private <T> Consumer<T> getResultsConsumerByCorrelationId(String correlationId, Class<T> resultType) {
+  private <T> Consumer<T> getResultsConsumerByCorrelationId(String correlationId, Class<T> resultType) throws ResultsConsumerCreationException {
     try {
       // Define the channel name, topic and schema for the consumer
       final String channelName = ProductRegistryQueryChannelName.PRODUCT_REGISTRY_READ_RESULT.toString();
@@ -171,7 +175,7 @@ public class ProductRegistryQueryResource {
           .subscriptionName(topic)
           .subscribe();
     } catch (PulsarClientException e) {
-      throw new RuntimeException("Failed to create consumer for correlationId: " + correlationId, e);
+      throw new ResultsConsumerCreationException("Failed to create the results consumer", e);
     }
   }
 }
