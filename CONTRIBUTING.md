@@ -92,4 +92,33 @@ Pour signaler un bug ou suggérer une amélioration :
    - Résultat attendu vs résultat observé.
    - Capture d’écran (si applicable).
 
+## Cycle de Versionnage
 
+Nous utilisons un cycle de versionnage basé sur SemVer et le workflow Git Flow.
+
+### Version actuelle : 0.1.0
+
+Cette version est marquée comme une version "précoce" (0.x) et ne doit pas être utilisée en production.
+
+Elle sert de base pour le travail collectif et les contributions futures.
+
+### Étapes pour une release :
+
+1. Créer une branche de release :
+   ```bash
+   git checkout develop
+   git checkout -b release/x.y.z
+   ```
+2. Mettre à jour les fichiers :
+
+   - Modifier le numéro de version dans package.json.
+
+3. Fusionner dans les branches principales :
+
+   - Fusionner release/x.y.z dans develop, puis dans main.
+
+4. Créer un tag Git :
+   ```bash
+   git tag -a vx.y.z -m "Version x.y.z"
+   git push origin vx.y.z
+   ```
