@@ -1,7 +1,7 @@
 package org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 /**
  * Base class for product registry events.
@@ -16,5 +16,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = ProductUpdated.class, name = "ProductUpdated"),
     @JsonSubTypes.Type(value = ProductRemoved.class, name = "ProductRemoved")
 })
-public sealed interface ProductRegistryEvent permits ProductRegistered, ProductRemoved, ProductUpdated {
+public sealed interface ProductRegistryEvent extends ChannelMessage permits ProductRegistered, ProductRemoved, ProductUpdated {
 }
